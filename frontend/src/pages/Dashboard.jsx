@@ -15,25 +15,21 @@ const header = {
 };
 
 const cardsRow = {
-  display: "flex",
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
   gap: "20px",
-  marginBottom: "30px",
+  marginBottom: "32px",
 };
 
-const card = {
-  flex: 1,
+const cardBase = {
   padding: "16px",
-  background: "#f4f6f8",
   borderRadius: "8px",
   textAlign: "center",
+  border: "1px solid #ddd",
 };
 
 const section = {
   marginBottom: "40px",
-};
-
-const sectionTitle = {
-  marginBottom: "12px",
 };
 
 const aiBox = {
@@ -41,6 +37,16 @@ const aiBox = {
   padding: "16px",
   borderRadius: "8px",
   border: "1px solid #ffe082",
+};
+
+const rules = {
+  temperatureMax: 50,
+  humidityMax: 70,
+  airQualityMax: 150,
+};
+
+const getCardColor = (value, limit) => {
+  return value > limit ? "#fee2e2" : "#ecfeff";
 };
 
 const Dashboard = () => {
@@ -60,20 +66,46 @@ const Dashboard = () => {
     <div style={container}>
       <div style={header}>
         <h1>Environmental Monitoring Dashboard</h1>
-        <p>Live IoT sensor data with AI-based anomaly detection</p>
+        <p>Real-time IoT sensor monitoring with AI-based anomaly detection</p>
       </div>
 
       {latest && (
         <div style={cardsRow}>
-          <div style={card}>
+          <div
+            style={{
+              ...cardBase,
+              background: getCardColor(
+                latest.temperature,
+                rules.temperatureMax
+              ),
+            }}
+          >
             <h3>Temperature</h3>
             <h2>{latest.temperature} °C</h2>
           </div>
-          <div style={card}>
+
+          <div
+            style={{
+              ...cardBase,
+              background: getCardColor(
+                latest.humidity,
+                rules.humidityMax
+              ),
+            }}
+          >
             <h3>Humidity</h3>
             <h2>{latest.humidity} %</h2>
           </div>
-          <div style={card}>
+
+          <div
+            style={{
+              ...cardBase,
+              background: getCardColor(
+                latest.airQuality,
+                rules.airQualityMax
+              ),
+            }}
+          >
             <h3>Air Quality Index</h3>
             <h2>{latest.airQuality}</h2>
           </div>
@@ -83,17 +115,17 @@ const Dashboard = () => {
       {data.length > 0 ? (
         <>
           <div style={section}>
-            <h3 style={sectionTitle}>Temperature Trend</h3>
+            <h3>Temperature Trend</h3>
             <TemperatureChart data={data} />
           </div>
 
           <div style={section}>
-            <h3 style={sectionTitle}>Humidity Trend</h3>
+            <h3>Humidity Trend</h3>
             <HumidityChart data={data} />
           </div>
 
           <div style={section}>
-            <h3 style={sectionTitle}>Air Quality Trend</h3>
+            <h3>Air Quality Trend</h3>
             <AirQualityChart data={data} />
           </div>
         </>
