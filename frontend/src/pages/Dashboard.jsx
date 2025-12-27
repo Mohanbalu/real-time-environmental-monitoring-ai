@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchRecentData } from "../api/sensor.api";
 import TemperatureChart from "../components/charts/TemperatureChart";
-import socket from "../sockets/socket";
+import HumidityChart from "../components/charts/HumidityChart";
+import AirQualityChart from "../components/charts/AirQualityChart";
+import useSocket from "../hooks/useSocket";
 
-/* 🔧 Card style */
 const cardStyle = {
   padding: "10px 20px",
   background: "#f5f5f5",
@@ -16,29 +17,21 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // 1️⃣ Load existing data first
     fetchRecentData().then((res) => {
       setData(res.reverse());
     });
-
-    // 2️⃣ Attach socket AFTER render
-    socket.on("sensor-data", (newData) => {
-      setData((prev) => [...prev.slice(-49), newData]);
-    });
-
-    return () => {
-      socket.off("sensor-data");
-    };
   }, []);
 
-  // 🔧 Latest sensor reading
+  useSocket("sensor-data", (newData) => {
+    setData((prev) => [...prev.slice(-49), newData]);
+  });
+
   const latest = data[data.length - 1];
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Environmental Monitoring Dashboard</h2>
 
-      {/* 🔹 Live metric cards */}
       {latest && (
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           <div style={cardStyle}>
@@ -56,14 +49,16 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* 🔹 Chart */}
       {data.length > 0 ? (
-        <TemperatureChart data={data} />
+        <>
+          <TemperatureChart data={data} />
+          <HumidityChart data={data} />
+          <AirQualityChart data={data} />
+        </>
       ) : (
         <p>Loading sensor data...</p>
       )}
 
-      {/* 🔹 AI Explanation */}
       {latest?.aiExplanation && (
         <div
           style={{
@@ -73,7 +68,7 @@ const Dashboard = () => {
             borderRadius: "6px",
           }}
         >
-          <strong>AI Explanation:</strong>
+          <strong>AI Explanation</strong>
           <p>{latest.aiExplanation}</p>
         </div>
       )}
