@@ -7,17 +7,14 @@ const GEMINI_URL =
 let lastAICallTime = 0;
 let aiInProgress = false;
 
-const AI_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
-
+const AI_COOLDOWN_MS = 5 * 60 * 1000;
 const generateAIExplanation = async (sensorId) => {
   const now = Date.now();
 
-  // 1️⃣ Prevent parallel calls
   if (aiInProgress) {
     return "AI explanation skipped (already in progress).";
   }
 
-  // 2️⃣ Cooldown check
   if (now - lastAICallTime < AI_COOLDOWN_MS) {
     return "AI explanation skipped due to cooldown.";
   }
@@ -57,7 +54,7 @@ Explain briefly why this environmental pattern is abnormal.
     console.error("⚠️ Gemini REST API failed, using fallback");
     return "Anomaly detected due to environmental values exceeding safe thresholds.";
   } finally {
-    aiInProgress = false; // 3️⃣ Release lock
+    aiInProgress = false;
   }
 };
 

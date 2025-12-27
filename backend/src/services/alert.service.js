@@ -1,13 +1,11 @@
 const Alert = require("../models/Alert");
 const { sendSMS } = require("../config/twilio");
 
-// ✅ Declare globally (module-level)
 let lastSmsAt = 0;
 
 const triggerAlert = async ({ sensorId, reasons }) => {
   const now = Date.now();
 
-  // ✅ Cooldown: 1 hour (adjust if needed)
   const COOLDOWN = 60 * 60 * 1000;
 
   if (now - lastSmsAt < COOLDOWN) {

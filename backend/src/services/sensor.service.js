@@ -39,8 +39,7 @@ const saveSensorData = async (data) => {
       }).sort({ aiGeneratedAt: -1 });
 
       const now = Date.now();
-      const cooldown = 10 * 60 * 1000; // 10 minutes
-
+      const cooldown = 10 * 60 * 1000;
       if (
         !lastAI ||
         !lastAI.aiGeneratedAt ||

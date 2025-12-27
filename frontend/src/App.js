@@ -1,7 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Alerts from "./pages/Alerts";
+import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 
 const App = () => {
