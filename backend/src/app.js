@@ -3,15 +3,18 @@ const cors = require("cors");
 
 const sensorRoutes = require("./routes/sensor.routes");
 const aiRoutes = require("./routes/ai.routes");
+const alertRoutes = require("./routes/alert.routes");
+const ruleRoutes = require("./routes/rule.routes");
 
-const app = express(); // ✅ app MUST be created first
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// ✅ Routes AFTER app initialization
 app.use("/api/sensors", sensorRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/alerts", alertRoutes);
+app.use("/api/rules", ruleRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "Backend running" });
